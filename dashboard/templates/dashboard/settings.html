@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+{% extends "dashboard/base.html" %}
+<title>{% block title %} E-Repute - settings {% endblock %}</title>
+<style>
+    .list-horizontal li {
+    display:inline-block;
+  }
+  .list-horizontal li:before {
+    content: '\00a0\2022\00a0\00a0';
+    color:#999;
+    color:rgba(0,0,0,0.5);
+    font-size:11px;
+  }
+  .list-horizontal li:first-child:before {
+    content: '';
+  }
+  </style>
+  {% load static %}
+  {% block bobdy_block %}
+  <div id="content1">
+  <!-- Begin Page Content -->
+  <div class="container-fluid">
+​
+    <!-- Page Heading -->
+    <h1 class="h3 mb-4 text-gray-800">Edit Your Profile</h1>
+    {{ msg |safe }}
+
+  <div class="row">
+    <div class="col-lg-6 d-none d-lg-block">
+      <div class="p-5">
+        
+      <form action="/edit_profile/" class="user" method="POST">
+          {% csrf_token %}
+          <div class="form-group">
+              <h5>First Name:</h5>
+              <input type="text" class="form-control form-control-user" name="FirstName" placeholder="{{user.first_name}}">
+          </div>
+          <div class="form-group">
+              <h5>Last Name:</h5>
+              <input type="text" class="form-control form-control-user" name="LastName" placeholder="{{user.last_name}}">
+          </div>
+          <div class="form-group">
+              <h5>Email:</h5>
+              <input type="email" class="form-control form-control-user" name="Email" placeholder="{{user.email}}">
+          </div>
+          <input type="hidden" name="userId"  value="{{ user.username}}">
+      <input type='submit'  class="btn btn-primary btn-user btn-block" value='Update'><br><br>
+​
+      </form>
+      </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}     

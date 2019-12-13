@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+{% extends "dashboard/base.html" %}
+<title>{% block title %} E-Repute - Check {% endblock %}</title>
+<style>
+    .list-horizontal li {
+    display:inline-block;
+  }
+  .list-horizontal li:before {
+    content: '\00a0\2022\00a0\00a0';
+    color:#999;
+    color:rgba(0,0,0,0.5);
+    font-size:11px;
+  }
+  .list-horizontal li:first-child:before {
+    content: '';
+  }
+  </style>
+{% load static %}
+{% block bobdy_block %}
+      <!-- Begin Page Content -->
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <h1 class="h3 mb-4 text-gray-800">Checker</h1>
+    <div class="row">
+      <div class="col-lg-6">
+        <!-- Text Emails -->
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Write the E-mail:</h6>
+          </div>
+          <div class="card-body">
+            {{ msg1 |safe }}
+            *Separate multiple emails by ; 
+
+            <form action='/one_email/' method='post'class="user">
+              {% csrf_token %}
+              <div class="form-group row">
+                  <textarea name='email' class="form-control z-depth-1" id="exampleFormControlTextarea345" rows="3" placeholder="example@xmpl.com; example@xmpl.com  "></textarea>
+              </div>
+              <input class="btn btn-primary btn-user btn-block" type='submit' value='Check'>
+              <hr>
+            </form>
+          </div>
+        </div>
+        <h1 class="text-center" class="h3 mb-4 text-gray-800">Or</h1>
+
+        <!-- Excel File -->
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Upload Excel file:</h6>
+          </div>
+          <div class="card-body">
+            {{ msg2 |safe }}
+            *Only Excel files accepted 
+            <form action="/excel_email/" method="post" enctype="multipart/form-data" class="user">
+              {% csrf_token %}
+              <div class="form-group row">
+                  <div class="col-sm-6 mb-3 mb-sm-0">
+              <input type="file"
+                    title="Upload excel file"
+                    name="excel_file"
+                    style="border: 1px solid black; padding: 5px;"
+                    ><div id ="error"></div>
+              </div>
+              </div>
+              <!-- <input type="submit"
+                    value="Upload"
+                    style="border: 1px solid green; padding:5px; border-radius: 2px; cursor: pointer;"> -->
+              <input class="btn btn-primary btn-user btn-block" type='submit' value='Upload'>
+              <hr>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+          <div class="card shadow mb-4">
+              <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary">Result:</h6>
+              </div>
+              <div class="card-body">
+                {% if form.flag == False%}
+                      {% if emails_list|length == 1 %}
+                        <h4 style="color: green;">The email is good</h4>
+                      {% else %}
+                        <h4 style="color: green;">All the emails are good</h4>
+                      {% endif %}
+                {% else %} 
+
+                      {% for email in emails_list %}
+                        {% if email.pwned == 'Good!' %}
+                          <h4 style="color: green;">{{ email.email }} is a good email </h4>
+                        {% endif %}
+                      {% endfor %}
+​
+                    <!-- <form action='/breaches/' method='post'> -->
+                      {% csrf_token %}
+                      {% for email in emails_list %}  
+                        {% if email.pwned == 'Bad!' %}
+                          <h4 style="color: red;">The breaches of {{ email.email }} :</h4>
+
+                          <ul class="list-horizontal">
+                            {% for e in email.breaches %}
+                              <li> <b>{{ e.Name }}</b> </li>
+                            {% endfor %}
+                          </ul>
+                          {% endif %}
+                      {% endfor %}
+                    <!-- </form> -->
+
+                {% endif %} 
+              </div>
+          </div>
+      </div>
+    </div>
+</div>
+  <!-- /.container-fluid -->
+{% endblock %}
+
+
+​
